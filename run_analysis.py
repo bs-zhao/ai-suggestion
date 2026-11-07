@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Reproducible analyses for AI source-labeling and everyday moral advice.
+"""Run every analysis directly from the original, unmodified survey Excel export.
 
-Uses only deidentified local data_private/participants.csv and data_private/trials.csv.
-Published aggregate data in data/ are intentionally insufficient for subject-level inference.
+Each invocation reimports the original workbook and regenerates deidentified,
+intermediate participant/trial CSVs before calculating statistics and figures.
+A successful run cannot silently reuse stale preprocessed records.
 """
 from __future__ import annotations
 import argparse
 import csv
 import json
+import hashlib
 import math
 import os
 from collections import Counter, defaultdict
@@ -22,6 +24,7 @@ from scipy import stats
 import statsmodels.api as sm
 
 ROOT = Path(__file__).resolve().parent
+DEFAULT_RAW = ROOT/'data'/'raw'/'c73c62ff5ec44be1b3fc6af2d5515eb6(1).xlsx'
 GROUPS = ('AI_label', 'Unlabeled')
 NAMES = {'AI_label': 'AI labeled', 'Unlabeled': 'Unlabeled'}
 COLORS = {'AI_label': '#27617b', 'Unlabeled': '#c47a48'}
@@ -444,15 +447,38 @@ def main():
     ap=argparse.ArgumentParser(description='Generate independent paper-ready result folders.')
     ap.add_argument('--module',choices=MODULES,help='Run one independent analysis module.')
     ap.add_argument('--all',action='store_true',help='Run all modules (default).')
-    ap.add_argument('--private-data-dir',default=str(ROOT/'data_private'))
+    ap.add_argument('--raw-xlsx',type=Path,default=DEFAULT_RAW,
+                    help='Original untouched questionnaire XLSX. Required for every run.')
+    ap.add_argument('--private-data-dir',default=str(ROOT/'data_private'),
+                    help='Local directory for regenerated, deidentified intermediate CSVs.')
     ap.add_argument('--output-dir',default=str(ROOT/'results'))
     args=ap.parse_args()
+    raw=Path(args.raw_xlsx).expanduser().resolve()
+    if not raw.is_file():
+        ap.error(f'Original Excel not found: {raw}. Put the exact original XLSX in data/raw/ '
+                 'after making the repository private, or pass --raw-xlsx PATH.')
+    if raw.suffix.lower()!='.xlsx':
+        ap.error('Input must be the original .xlsx workbook, not a processed CSV.')
+    from scripts.import_raw_xlsx import convert
     pdir=Path(args.private_data_dir)
-    if not (pdir/'participants.csv').is_file() or not (pdir/'trials.csv').is_file():
-        ap.error('Missing deidentified private data. Extract the private-data ZIP locally into data_private/. Public GitHub deliberately includes only grouped data.')
+    # Deliberately parse the raw workbook on EVERY run. No cached CSV fallback.
+    convert(raw,pdir)
     people=read_csv(pdir/'participants.csv');trials=read_csv(pdir/'trials.csv')
     ensure_numeric(trials,people);validate(trials,people)
     out=Path(args.output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    original_sha256=hashlib.sha256(raw.read_bytes()).hexdigest()
+    provenance=[
+        'SOURCE DATA PROVENANCE',
+        'Source: original unmodified uploaded Excel workbook',
+        f'Original file name: {raw.name}',
+        f'SHA-256: {original_sha256}',
+        'Processing: scripts/import_raw_xlsx.py -> temporary participant/trial CSVs -> run_analysis.py',
+        f'Validated counts: {len(people)} participants and {len(trials)} scenarios; 30 participants per arm.',
+        'Original workbook is read-only and is NEVER overwritten by this program.',
+        'Raw file contains identifying information: never upload it to a public repository.',
+    ]
+    (out/'data_provenance.txt').write_text('\\n'.join(provenance)+'\\n',encoding='utf-8')
     executors={
         MODULES[0]:lambda folder:demographics(trials,people,folder),
         MODULES[1]:lambda folder:descriptive(trials,people,folder),
@@ -468,6 +494,8 @@ def main():
     for name in names:
         folder=out/name
         executors[name](folder)
+        # Keep exact source provenance with each independently usable analysis folder.
+        (folder/'data_provenance.txt').write_text('\\n'.join(provenance)+'\\n',encoding='utf-8')
         print('OK:',name,'=>',folder)
     print('Analyses complete; all reports are generated directly from subject/trial records.')
 
