@@ -478,7 +478,7 @@ def main():
         'Original workbook is read-only and is NEVER overwritten by this program.',
         'Raw file contains identifying information: never upload it to a public repository.',
     ]
-    (out/'data_provenance.txt').write_text('\\n'.join(provenance)+'\\n',encoding='utf-8')
+    (out/'data_provenance.txt').write_text('\n'.join(provenance)+'\n',encoding='utf-8')
     executors={
         MODULES[0]:lambda folder:demographics(trials,people,folder),
         MODULES[1]:lambda folder:descriptive(trials,people,folder),
@@ -495,7 +495,7 @@ def main():
         folder=out/name
         executors[name](folder)
         # Keep exact source provenance with each independently usable analysis folder.
-        (folder/'data_provenance.txt').write_text('\\n'.join(provenance)+'\\n',encoding='utf-8')
+        (folder/'data_provenance.txt').write_text('\n'.join(provenance)+'\n',encoding='utf-8')
         print('OK:',name,'=>',folder)
     print('Analyses complete; all reports are generated directly from subject/trial records.')
 
