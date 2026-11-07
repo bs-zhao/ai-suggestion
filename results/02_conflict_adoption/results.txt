@@ -1,0 +1,19 @@
+MODULE 02 | ADOPTION OF CONFLICTING ADVICE
+Primary participant-level analysis: a participant's mean adoption among conflict trials is one observation.
+Participant means and pooled trial percentages are intentionally reported separately.
+
+AI labeled: 27/119 conflict trials adopted (22.7% pooled).
+  Participant mean adoption=16.11%; n=30; 95% CI [5.81, 26.41] percentage points.
+  Subjects with at least one conflict adoption: 10/30.
+Unlabeled: 34/122 conflict trials adopted (27.9% pooled).
+  Participant mean adoption=28.42%; n=30; 95% CI [17.15, 39.69] percentage points.
+  Subjects with at least one conflict adoption: 19/30.
+
+Adoption, in proportions: participant-level Welch comparison (AI minus unlabeled).
+  AI mean=0.161, n=30; unlabeled mean=0.284, n=30.
+  Mean difference=-0.123 proportion units; 95% CI [-0.273, 0.026].
+  t(57.54)=-1.648, p=0.1047; Hedges g=-0.420.
+  Same mean difference in percentage points=-12.31, 95% CI [-27.25, 2.64].
+
+MANUSCRIPT-READY: When advice conflicted with participants' initial choices, the participant-average adoption rate was 16.1% in the AI-label condition and 28.4% in the unlabeled condition. The difference was not statistically significant, t(57.54) = -1.65, p = 0.105, 95% CI for the difference [-27.3, 2.6] percentage points.
+Caution: the unadjusted p-value is exploratory, not evidence of a confirmed AI-aversion effect.

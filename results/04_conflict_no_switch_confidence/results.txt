@@ -1,0 +1,20 @@
+MODULE 04 | CONFIDENCE AFTER CONFLICT, NO CHOICE SWITCH
+Eligibility: initial conflict AND unchanged final choice.
+Within-condition tests use each eligible participant's mean post-minus-pre confidence.
+Participants without qualifying trials are excluded from this conditional analysis.
+
+AI labeled: 92 qualifying trials / 29 participants; trial mean pre=4.217, post=4.250, change=+0.033.
+AI labeled: change versus zero using participant averages.
+  n=29, M=0.025, 95% CI [-0.200, 0.249], t(28)=0.226, p=0.8231.
+
+Unlabeled: 88 qualifying trials / 28 participants; trial mean pre=4.216, post=4.216, change=+0.000.
+Unlabeled: change versus zero using participant averages.
+  n=28, M=0.005, 95% CI [-0.160, 0.169], t(27)=0.059, p=0.9531.
+
+Between-source change: participant-level Welch comparison (AI minus unlabeled).
+  AI mean=0.025, n=29; unlabeled mean=0.005, n=28.
+  Mean difference=0.020 points; 95% CI [-0.253, 0.292].
+  t(50.89)=0.147, p=0.8837; Hedges g=0.038.
+No no-advice control was included; confidence changes alone do not establish a causal effect of exposure to advice.
+
+MANUSCRIPT-READY: Among trials in which advice conflicted with the initial choice and the original choice was retained, confidence change did not differ reliably from zero in either condition (AI: M = 0.025, p = 0.8231; unlabeled: M = 0.005, p = 0.9531), nor between conditions, p = 0.884.

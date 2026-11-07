@@ -1,0 +1,29 @@
+MODULE 06 | SCENARIO-LEVEL HETEROGENEITY
+12 fixed scenarios are examined descriptively; this is not a cross-cultural or item-generalization test.
+
+E01 | AI labeled: conflict=13/30, adopted=4, pooled adoption=30.8%.
+E01 | Unlabeled: conflict=19/30, adopted=7, pooled adoption=36.8%.
+E02 | AI labeled: conflict=4/30, adopted=2, pooled adoption=50.0%.
+E02 | Unlabeled: conflict=1/30, adopted=0, pooled adoption=0.0%.
+E03 | AI labeled: conflict=5/30, adopted=3, pooled adoption=60.0%.
+E03 | Unlabeled: conflict=2/30, adopted=1, pooled adoption=50.0%.
+E04 | AI labeled: conflict=11/30, adopted=2, pooled adoption=18.2%.
+E04 | Unlabeled: conflict=7/30, adopted=1, pooled adoption=14.3%.
+E05 | AI labeled: conflict=13/30, adopted=2, pooled adoption=15.4%.
+E05 | Unlabeled: conflict=16/30, adopted=7, pooled adoption=43.8%.
+E06 | AI labeled: conflict=6/30, adopted=4, pooled adoption=66.7%.
+E06 | Unlabeled: conflict=5/30, adopted=3, pooled adoption=60.0%.
+E07 | AI labeled: conflict=3/30, adopted=0, pooled adoption=0.0%.
+E07 | Unlabeled: conflict=4/30, adopted=1, pooled adoption=25.0%.
+E08 | AI labeled: conflict=9/30, adopted=2, pooled adoption=22.2%.
+E08 | Unlabeled: conflict=9/30, adopted=5, pooled adoption=55.6%.
+E09 | AI labeled: conflict=26/30, adopted=3, pooled adoption=11.5%.
+E09 | Unlabeled: conflict=28/30, adopted=4, pooled adoption=14.3%.
+E10 | AI labeled: conflict=2/30, adopted=2, pooled adoption=100.0%.
+E10 | Unlabeled: conflict=4/30, adopted=1, pooled adoption=25.0%.
+E11 | AI labeled: conflict=2/30, adopted=0, pooled adoption=0.0%.
+E11 | Unlabeled: conflict=4/30, adopted=1, pooled adoption=25.0%.
+E12 | AI labeled: conflict=25/30, adopted=3, pooled adoption=12.0%.
+E12 | Unlabeled: conflict=23/30, adopted=3, pooled adoption=13.0%.
+
+Compare scenario profiles without treating 12 trials per person as independent for inferential claims.

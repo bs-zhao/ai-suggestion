@@ -1,0 +1,13 @@
+# Never publish participant-level records, raw exports or personal identifiers
+/data_private/
+/data_private_test/
+*.xlsx
+*.xls
+*.xlsm
+*.ipynb_checkpoints
+__pycache__/
+*.pyc
+.DS_Store
+# local run logs
+run_log.txt
+_prepare_private.py

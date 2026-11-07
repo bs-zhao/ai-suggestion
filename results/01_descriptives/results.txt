@@ -1,0 +1,16 @@
+MODULE 01 | DESCRIPTIVE CHOICE AND CONFIDENCE STATISTICS
+Trial-level descriptions are not independent observations.
+
+AI labeled: participants=30; trials=360.
+  Initially agree=241/360 (66.9%), conflict=119/360 (33.1%).
+  All switches=27/360; switches after agreement=0/241.
+  Mean pre confidence=4.233; post=4.469; delta=+0.236.
+  agree: mean pre=4.332, post=4.631, delta=+0.299.
+  conflict: mean pre=4.034, post=4.143, delta=+0.109.
+
+Unlabeled: participants=30; trials=360.
+  Initially agree=238/360 (66.1%), conflict=122/360 (33.9%).
+  All switches=36/360; switches after agreement=2/238.
+  Mean pre confidence=4.203; post=4.408; delta=+0.206.
+  agree: mean pre=4.239, post=4.592, delta=+0.353.
+  conflict: mean pre=4.131, post=4.049, delta=-0.082.

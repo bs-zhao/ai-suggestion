@@ -1,0 +1,11 @@
+variable,category,AI_label,Unlabeled
+age_range,18—24岁,6,9
+age_range,25—34岁,12,9
+age_range,35—44岁,8,9
+age_range,45—54岁,3,1
+age_range,55岁及以上,1,2
+country,中国,30,30
+language,中文,30,30
+ai_frequency,偶尔使用,2,3
+ai_frequency,几乎每天使用,17,13
+ai_frequency,每周使用,11,14

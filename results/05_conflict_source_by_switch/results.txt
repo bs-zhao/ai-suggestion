@@ -1,0 +1,19 @@
+MODULE 05 | SOURCE LABEL x CHOICE REVISION, CONFLICT TRIALS ONLY
+Design: 2 source labels x switched-vs-stayed (switch is a POST-ADVICE behavior, not randomized).
+Outcome: post − pre confidence (integer scale -4..+4).
+Primary interaction analysis here is exploratory; not a causal moderation estimate.
+
+AI labeled, stayed: n_trials=92, n_participants=29, mean_pre=4.217, mean_post=4.250, mean_delta=+0.033.
+AI labeled, switched: n_trials=27, n_participants=10, mean_pre=3.407, mean_post=3.778, mean_delta=+0.370.
+Unlabeled, stayed: n_trials=88, n_participants=28, mean_pre=4.216, mean_post=4.216, mean_delta=+0.000.
+Unlabeled, switched: n_trials=34, n_participants=19, mean_pre=3.912, mean_post=3.618, mean_delta=-0.294.
+
+Unadjusted cluster-robust OLS: interaction beta=+0.6319, SE=0.3547, 95% CI [-0.0633, +1.3270], p=0.0748; n_trials=241, clusters=60.
+Scenario fixed effects + cluster-robust OLS: interaction beta=+0.5810, SE=0.3372, 95% CI [-0.0799, +1.2418], p=0.0849; n_trials=241, clusters=60.
+Scenario FE + initial confidence + clustered OLS: interaction beta=+0.2515, SE=0.2410, 95% CI [-0.2207, +0.7238], p=0.2965; n_trials=241, clusters=60.
+
+Interpretation: a difference in post-switch confidence may reflect selection into switching or differing baseline confidence.
+Baseline confidence is systematically lower among switchers with AI-labeled advice, so report adjusted results.
+A significant within-group change is NOT a significant source-by-switch interaction.
+
+MANUSCRIPT-READY: Conditional on conflicting advice, choice revision and source label showed a descriptive interaction in confidence change. This source-by-revision interaction did not remain statistically significant when initial confidence and scenario were controlled (beta = 0.252, p = 0.296). Because revision is a post-advice behavior, these conditional patterns cannot establish a causal effect of the source label.

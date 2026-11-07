@@ -1,0 +1,3 @@
+source,n_participants,n_conflict_trials,n_adopted,pooled_adoption_percent,mean_participant_adoption_percent,mean_ci_low_percent,mean_ci_high_percent
+AI_label,30,119,27,22.6891,16.1111,5.8117,26.4106
+Unlabeled,30,122,34,27.8689,28.4167,17.1466,39.6867

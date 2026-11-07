@@ -1,0 +1,20 @@
+MODULE 03 | CONFIDENCE AFTER AGREEMENT, NO CHOICE SWITCH
+Eligibility: initial agreement AND unchanged final choice.
+Within-condition tests use each eligible participant's mean post-minus-pre confidence.
+Participants without qualifying trials are excluded from this conditional analysis.
+
+AI labeled: 241 qualifying trials / 30 participants; trial mean pre=4.332, post=4.631, change=+0.299.
+AI labeled: change versus zero using participant averages.
+  n=30, M=0.318, 95% CI [0.185, 0.452], t(29)=4.863, p=<.0001.
+
+Unlabeled: 236 qualifying trials / 30 participants; trial mean pre=4.242, post=4.597, change=+0.356.
+Unlabeled: change versus zero using participant averages.
+  n=30, M=0.354, 95% CI [0.206, 0.501], t(29)=4.898, p=<.0001.
+
+Between-source change: participant-level Welch comparison (AI minus unlabeled).
+  AI mean=0.318, n=30; unlabeled mean=0.354, n=30.
+  Mean difference=-0.035 points; 95% CI [-0.230, 0.160].
+  t(57.46)=-0.360, p=0.7201; Hedges g=-0.092.
+No no-advice control was included; confidence changes alone do not establish a causal effect of exposure to advice.
+
+MANUSCRIPT-READY: When advice agreed with the initial choice and participants maintained that choice, confidence increased in both conditions (AI: M = 0.318, p = <.0001; unlabeled: M = 0.354, p = <.0001). The between-condition difference was not significant, p = 0.720.

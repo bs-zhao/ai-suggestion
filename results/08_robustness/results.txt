@@ -1,0 +1,15 @@
+MODULE 08 | ROBUSTNESS AND ANALYSIS CAVEATS
+Key exploratory sensitivity checks. No multiple-comparison-adjusted confirmatory claim is made.
+
+Scenario-fixed-effects logistic regression with participant-clustered SE: log OR AI vs unlabeled=-0.3509, SE=0.4903, OR=0.7040, 95% OR CI [0.2693,1.8404], p=0.4741.
+
+Number of conflicting scenarios per participant (denominator heterogeneity):
+AI labeled: min=1, median=4.0, max=8, zero conflict=0.
+Unlabeled: min=1, median=4.0, max=8, zero conflict=0.
+
+Confidence is on a 1–5 ordinal scale and has a high baseline; normal-theory mean tests should be treated as approximations.
+Subsetting on post-advice switching can introduce selection bias.
+No unaided/no-advice group: pre/post changes alone cannot isolate a causal effect of advice exposure.
+One original source file contains IP, location and platform identifiers: these must not be committed to a public repository.
+Study materials are Chinese and no validated EMCS short form is claimed.
+Participants are the independent sampling units, not 720 trial observations.

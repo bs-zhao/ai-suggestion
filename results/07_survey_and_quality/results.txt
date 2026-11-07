@@ -1,0 +1,16 @@
+MODULE 07 | POST-EXPERIMENT RATINGS AND QUALITY CHECKS
+P1 useful; P2 fits own views; P3 autonomous; P4 use similar advice again (1..5).
+Secondary and exploratory comparisons; Holm correction across the four two-sided p-values.
+
+P1: AI M=3.633, unlabeled M=3.867, difference=-0.233, Welch p=0.2326.
+P2: AI M=4.400, unlabeled M=4.367, difference=+0.033, Welch p=0.8483.
+P3: AI M=4.467, unlabeled M=4.200, difference=+0.267, Welch p=0.2316.
+P4: AI M=3.933, unlabeled M=4.400, difference=-0.467, Welch p=0.0206.
+P1: Holm-adjusted p=0.6948.
+P2: Holm-adjusted p=0.8483.
+P3: Holm-adjusted p=0.6948.
+P4: Holm-adjusted p=0.0824.
+
+Source recall is a manipulation-check outcome; DO NOT use recall to reassign randomized conditions.
+Source recall AI labeled: AI=30
+Source recall Unlabeled: AI=6, 不记得=5, 未说明来源=19
