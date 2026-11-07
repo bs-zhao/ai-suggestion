@@ -1,4 +1,6 @@
-# Never publish participant-level records, raw exports or personal identifiers
+# Sensitive original is NEVER to be committed while repository is public.
+# In a VERIFIED private repo, add the exact original using git add -f data/raw/*.xlsx
+/data/raw/
 /data_private/
 /data_private_test/
 *.xlsx
