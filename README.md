@@ -66,7 +66,7 @@ The raw XLSX is retained byte-for-byte, with its original filename. Derived
 `data_private/participants.csv` and `data_private/trials.csv` are **temporary,
 regenerated intermediates**; do not use them as canonical data, and do not
 commit them. The importer discards identifiers and free text from derived CSVs.
-`data/aggregate_by_source_scenario.csv` contains only grouped summary measures.
+No preprocessed data are committed under `data/`. All descriptive statistics are regenerated under `results/`.
 
 The repository initially originated as a *public* code-only repository. The raw
 file must be added to GitHub **only after** verifying repository visibility is
@@ -92,12 +92,11 @@ run_analysis.py                 # Every reproducible module, deterministic rando
 scripts/import_raw_xlsx.py     # Original Excel -> deidentified intermediate CSVs
 requirements.txt
 .gitignore
-data/aggregate_by_source_scenario.csv  # Public, grouped only
+data/raw/*.xlsx              # Original unmodified source; private repo ONLY
 results/00_demographics/...    # results.txt, aggregate statistics.csv, publication figure(s)
 results/01_descriptives/...
 ...
 results/08_robustness/...
-data/raw/*.xlsx              # Original unmodified source; private repo ONLY
 data_private/                  # Generated intermediates, ignored by Git
 ```
 
