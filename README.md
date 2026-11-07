@@ -2,24 +2,40 @@
 
 Reproducible analysis and publication figures for a two-arm randomized Chinese-language pilot study (60 respondents, 12 everyday dilemmas each; 720 repeated decisions). The source label is the experimental manipulation: **AI-labeled advice** vs **advice with no source specified**. Both arms received the same fixed recommendations and reasons.
 
-## Start here
+## Reproducible pipeline — from the exact original Excel
 
-```bash
-# Windows Anaconda: conda activate py11
+**Data confidentiality: this repository MUST be private before committing the source workbook.**
+The official source is the unmodified 60-person Excel export at
+`data/raw/c73c62ff5ec44be1b3fc6af2d5515eb6(1).xlsx`.
+
+```bat
+conda activate py11
 python -m pip install -r requirements.txt
-
-# Obtain the original workbook from the research team and KEEP IT PRIVATE.
-# Run locally from the repository root (do NOT commit data_private/).
-python scripts/import_raw_xlsx.py --input "PATH/TO/PRIVATE_SOURCE.xlsx" --output-dir data_private
-
-# Reproduce all paper figures, CSV statistics, and detailed English reports.
 python run_analysis.py --all
+```
 
-# Or run one independent module.
+To run only the source-by-choice-revision analysis (still imports original XLSX first):
+
+```bat
 python run_analysis.py --module 05_conflict_source_by_switch
 ```
 
-**Each module generates its own directory** under `results/<module>/`, with a detailed `results.txt`, a `statistics.csv` where appropriate, and matching 300-dpi PNG, editable SVG and vector PDF figures. Statistical results are **computed from data** on each run and are not hard-coded. You may override `--output-dir` and `--private-data-dir`.
+You can also supply the location of a local, original Excel file:
+
+```bat
+python run_analysis.py --all --raw-xlsx "D:\Research\original_export.xlsx"
+```
+
+**Every run starts by parsing the original workbook.** There is no fallback to
+cached `participants.csv`/`trials.csv`: the importer re-creates both files in
+`data_private/` on every invocation, and validates 60 participants, two groups
+of 30, and 720 trials. It records the exact workbook's SHA-256 fingerprint
+in `results/data_provenance.txt` and each module's `data_provenance.txt`.
+The raw input is read-only; original records are never changed.
+
+Outputs are in `results/<module>/`, containing a detailed `results.txt`,
+`statistics.csv` (where applicable), and matching publication figures as
+300-dpi PNG, editable SVG and vector PDF. Use `--output-dir` to change output.
 
 ## Output modules
 
@@ -37,13 +53,25 @@ python run_analysis.py --module 05_conflict_source_by_switch
 
 Recommended main paper figures: `02`, `03`, `04`, `05`. `00` and `01` provide a demographics/overview table, while `06`–`08` are useful supplements.
 
-## Data in this **public** repository
+## Data protection and source of truth
 
-`data/aggregate_by_source_scenario.csv` contains only **condition-by-scenario grouped statistics** (24 rows; no respondent-level records). It permits inspection of the material and basic condition-level descriptive patterns but **cannot** reproduce individual-level hypothesis tests. All included `results/*.txt`, `statistics.csv` and SVG plots are derived aggregate outputs and carry no raw participant identifiers.
+This study's original workbook includes direct and indirect personal identifiers
+such as platform IDs, IP addresses, geography, response times and free text.
+Although stored in `data/raw/` for the private research project, **do not change
+the repository to public while the original workbook is included**. Git commits
+and their history may retain past versions of sensitive files even after deletion.
+Access must be restricted to authorized researchers and applicable consent terms.
 
-**Do not commit the raw XLSX or `data_private/`.** The original file contains participant/platform IDs, IP addresses, geographic coordinates, timestamps and optional free-text responses. The consent form describes research-only custody and does not authorize publishing individual records in a public repository. The protected local analysis input (`participants.csv`, `trials.csv`) strips direct identifiers and free text but should remain private unless a separate data-sharing authorization permits release. A private ZIP with this input is supplied separately to the study team.
+The raw XLSX is retained byte-for-byte, with its original filename. Derived
+`data_private/participants.csv` and `data_private/trials.csv` are **temporary,
+regenerated intermediates**; do not use them as canonical data, and do not
+commit them. The importer discards identifiers and free text from derived CSVs.
+`data/aggregate_by_source_scenario.csv` contains only grouped summary measures.
 
-`data_private/` is ignored by Git. The local importer reads the original workbook via Python's standard ZIP/XML libraries, extracts only pre-specified research variables, assigns new anonymous IDs, applies a documented column map, and validates trial encoding. It never copies IPs, platform IDs, cities, latitude/longitude, original dates, or open-ended responses to the derived CSV files. The source workbook is not modified.
+The repository initially originated as a *public* code-only repository. The raw
+file must be added to GitHub **only after** verifying repository visibility is
+Private. The downloadable full local package includes the original raw file
+and is designed to be committed once the repository has been secured.
 
 ## Design and statistical decisions
 
@@ -61,7 +89,7 @@ Recommended main paper figures: `02`, `03`, `04`, `05`. `00` and `01` provide a 
 
 ```text
 run_analysis.py                 # Every reproducible module, deterministic random seed
-scripts/import_raw_xlsx.py     # Private workbook -> deidentified local participant/trial CSVs
+scripts/import_raw_xlsx.py     # Original Excel -> deidentified intermediate CSVs
 requirements.txt
 .gitignore
 data/aggregate_by_source_scenario.csv  # Public, grouped only
@@ -69,11 +97,12 @@ results/00_demographics/...    # results.txt, aggregate statistics.csv, publicat
 results/01_descriptives/...
 ...
 results/08_robustness/...
-data_private/                  # Local-only, NEVER pushed to public GitHub
+data/raw/*.xlsx              # Original unmodified source; private repo ONLY
+data_private/                  # Generated intermediates, ignored by Git
 ```
 
 ## Tests / verification
 
-On the original provided 60-person workbook, the importer and analysis pass hard checks: 60 unique respondents, 30 per condition, 12 trials each (720 total), 241 initial-conflict trials, 61 conflict-adoption events, and all choice/confidence variable identities. The importer was compared against a separate read of the same workbook, matching every derived field. The code has been executed end-to-end; chart/report files were generated successfully.
+When run on the original provided 60-person workbook, the importer and analysis verify: 60 unique respondents, 30 per condition, 12 trials each (720 total), 241 initial-conflict trials, 61 conflict-adoption events, and all choice/confidence variable identities. The importer was compared against a separate read of the same workbook, matching every derived field. The code has been executed end-to-end; chart/report files were generated successfully.
 
 The original data were collected in Chinese. The materials were adapted from Singer et al. (2019) but are **not** a validated 12-item EMCS short scale.
