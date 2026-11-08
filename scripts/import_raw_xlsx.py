@@ -58,12 +58,53 @@ def write(path,records):
         writer.writeheader();writer.writerows(records)
 
 
-def convert(source, target):
-    allrows=load_xlsx(source)
-    assert len(allrows)>=62, f'Unexpected workbook dimensions: {len(allrows)}'
-    # The export contains a title row, a question-number row, then responses.
-    body=allrows[2:]
-    assert len(body)==60, f'Expected exactly 60 respondents, got {len(body)}'
+def combine_original_exports(sources):
+    """Combine untouched Excel exports, deduplicated by original response ID.
+
+    data1.xlsx (30 respondents) is fully contained in data2.xlsx (60). We
+    process the later file first so the original 60-person row order remains
+    unchanged. Conflicting duplicate records are a hard error, never guessed.
+    """
+    sources=[Path(x) for x in sources]
+    if not sources:
+        raise ValueError('No original Excel exports supplied.')
+    original_by_id={}
+    reference_headers=None
+    source_counts=[]
+    duplicates=0
+    # Most recent export last in command-line inputs; give it row-order priority.
+    for source in reversed(sources):
+        if not source.is_file():
+            raise FileNotFoundError(f'Missing required original Excel export: {source}')
+        rows=load_xlsx(source)
+        if len(rows)<3:
+            raise ValueError(f'Excel export contains no responses: {source}')
+        headers=rows[:2]
+        if reference_headers is None:
+            reference_headers=headers
+        elif headers!=reference_headers:
+            raise ValueError(f'Original Excel question headers differ: {source}')
+        source_counts.append((source.name,len(rows)-2))
+        for row in rows[2:]:
+            rid=str(row[0]).strip()
+            if not rid:
+                raise ValueError(f'Missing original response ID in {source}')
+            if rid in original_by_id:
+                if row!=original_by_id[rid]:
+                    raise ValueError(f'Conflicting responses for original ID {rid!r} in {source}')
+                duplicates+=1
+            else:
+                original_by_id[rid]=row
+    body=list(original_by_id.values())
+    if len(body)!=60:
+        raise ValueError(f'Expected 60 distinct respondents after deduplication, got {len(body)}; source files: {source_counts}')
+    return body,source_counts,duplicates
+
+
+def convert(sources, target):
+    if isinstance(sources, (str,Path)):
+        sources=[Path(sources)]
+    body,source_counts,duplicates=combine_original_exports(sources)
     participants=[]; trials=[]
     for i,r in enumerate(body,1):
         cond=r[17]
@@ -104,13 +145,13 @@ def convert(source, target):
     assert Counter(p['source'] for p in participants)=={'AI_label':30,'Unlabeled':30}
     assert len(trials)==720
     write(target/'participants.csv',participants);write(target/'trials.csv',trials)
-    print('Read',len(participants),'respondents and',len(trials),'trials. Saved to',target)
+    print('Read',len(participants),'unique respondents and',len(trials),'trials from',source_counts,'; exact duplicate rows:',duplicates,'; saved to',target)
     print('No platform IDs, IPs, timestamps, coordinates, city, free text, or email are exported.')
 
 
 def main():
     ap=argparse.ArgumentParser()
-    ap.add_argument('--input',type=Path,required=True,help='Local private raw workbook')
+    ap.add_argument('--input',type=Path,nargs='+',required=True,help='Original raw exports (e.g. data/data1.xlsx data/data2.xlsx), with later exports last')
     ap.add_argument('--output-dir',type=Path,default=Path('data_private'))
     args=ap.parse_args()
     convert(args.input,args.output_dir)
