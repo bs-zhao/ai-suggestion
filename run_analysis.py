@@ -24,7 +24,7 @@ from scipy import stats
 import statsmodels.api as sm
 
 ROOT = Path(__file__).resolve().parent
-DEFAULT_RAW = ROOT/'data'/'raw'/'c73c62ff5ec44be1b3fc6af2d5515eb6(1).xlsx'
+DEFAULT_RAWS = (ROOT/'data'/'data1.xlsx', ROOT/'data'/'data2.xlsx')
 GROUPS = ('AI_label', 'Unlabeled')
 NAMES = {'AI_label': 'AI labeled', 'Unlabeled': 'Unlabeled'}
 COLORS = {'AI_label': '#27617b', 'Unlabeled': '#c47a48'}
@@ -435,7 +435,7 @@ def robustness(trials,people,where):
     text += ['', 'Confidence is on a 1–5 ordinal scale and has a high baseline; normal-theory mean tests should be treated as approximations.',
              'Subsetting on post-advice switching can introduce selection bias.',
              'No unaided/no-advice group: pre/post changes alone cannot isolate a causal effect of advice exposure.',
-             'One original source file contains IP, location and platform identifiers: these must not be committed to a public repository.',
+             'Original source files contain IP, location and platform identifiers: these must not be committed to a public repository.',
              'Study materials are Chinese and no validated EMCS short form is claimed.',
              'Participants are the independent sampling units, not 720 trial observations.']
     write_report(where,text)
@@ -447,32 +447,32 @@ def main():
     ap=argparse.ArgumentParser(description='Generate independent paper-ready result folders.')
     ap.add_argument('--module',choices=MODULES,help='Run one independent analysis module.')
     ap.add_argument('--all',action='store_true',help='Run all modules (default).')
-    ap.add_argument('--raw-xlsx',type=Path,default=DEFAULT_RAW,
-                    help='Original untouched questionnaire XLSX. Required for every run.')
+    ap.add_argument('--raw-xlsx',type=Path,action='append',default=None,
+                    help='Original untouched XLSX; may be specified repeatedly. Defaults to data/data1.xlsx and data/data2.xlsx.')
     ap.add_argument('--private-data-dir',default=str(ROOT/'data_private'),
                     help='Local directory for regenerated, deidentified intermediate CSVs.')
     ap.add_argument('--output-dir',default=str(ROOT/'results'))
     args=ap.parse_args()
-    raw=Path(args.raw_xlsx).expanduser().resolve()
-    if not raw.is_file():
-        ap.error(f'Original Excel not found: {raw}. Put the exact original XLSX in data/raw/ '
-                 'after making the repository private, or pass --raw-xlsx PATH.')
-    if raw.suffix.lower()!='.xlsx':
-        ap.error('Input must be the original .xlsx workbook, not a processed CSV.')
+    raw_files=[Path(p).expanduser().resolve() for p in (args.raw_xlsx or DEFAULT_RAWS)]
+    for raw in raw_files:
+        if not raw.is_file():
+            ap.error(f'Original Excel not found: {raw}. Put BOTH original files data1.xlsx and data2.xlsx directly in data/, or use --raw-xlsx PATH (repeat for multiple files).')
+        if raw.suffix.lower()!='.xlsx':
+            ap.error(f'Input is not an original .xlsx workbook: {raw}')
     from scripts.import_raw_xlsx import convert
     pdir=Path(args.private_data_dir)
-    # Deliberately parse the raw workbook on EVERY run. No cached CSV fallback.
-    convert(raw,pdir)
+    # Every run reparses both originals and validates exact-duplicate overlap.
+    convert(raw_files,pdir)
     people=read_csv(pdir/'participants.csv');trials=read_csv(pdir/'trials.csv')
     ensure_numeric(trials,people);validate(trials,people)
     out=Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
-    original_sha256=hashlib.sha256(raw.read_bytes()).hexdigest()
+    original_checksums=[(raw.name,hashlib.sha256(raw.read_bytes()).hexdigest()) for raw in raw_files]
     provenance=[
         'SOURCE DATA PROVENANCE',
-        'Source: original unmodified uploaded Excel workbook',
-        f'Original file name: {raw.name}',
-        f'SHA-256: {original_sha256}',
+        'Source: original unmodified uploaded Excel workbook(s)',
+        *[f'Original file: {name}; SHA-256: {sha}' for name,sha in original_checksums],
+        'Duplicate survey response IDs are checked across source files; identical records counted once.',
         'Processing: scripts/import_raw_xlsx.py -> temporary participant/trial CSVs -> run_analysis.py',
         f'Validated counts: {len(people)} participants and {len(trials)} scenarios; 30 participants per arm.',
         'Original workbook is read-only and is NEVER overwritten by this program.',
