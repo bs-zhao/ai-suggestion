@@ -4,9 +4,11 @@ Reproducible analysis and publication figures for a two-arm randomized Chinese-l
 
 ## Reproducible pipeline — from the exact original Excel
 
-**Data confidentiality: this repository MUST be private before committing the source workbook.**
-The official source is the unmodified 60-person Excel export at
-`data/raw/c73c62ff5ec44be1b3fc6af2d5515eb6(1).xlsx`.
+**Data confidentiality: this repository MUST be private before committing the source workbooks.**
+The two untouched original exports belong directly under `data/`:
+`data/data1.xlsx` (30 responses) and `data/data2.xlsx` (60 responses).
+**All 30 data1 records also occur identically in data2; the unique N is 60, NOT 90.**
+The importer cross-checks exact duplicates by original response ID and refuses conflicting records.
 
 ```bat
 conda activate py11
@@ -14,24 +16,24 @@ python -m pip install -r requirements.txt
 python run_analysis.py --all
 ```
 
-To run only the source-by-choice-revision analysis (still imports original XLSX first):
+To run only the source-by-choice-revision analysis (still imports both original XLSX files first):
 
 ```bat
 python run_analysis.py --module 05_conflict_source_by_switch
 ```
 
-You can also supply the location of a local, original Excel file:
+To override the two source paths, pass the original Excel paths as repeated arguments:
 
 ```bat
-python run_analysis.py --all --raw-xlsx "D:\Research\original_export.xlsx"
+python run_analysis.py --all --raw-xlsx "D:\Research\data1.xlsx" --raw-xlsx "D:\Research\data2.xlsx"
 ```
 
-**Every run starts by parsing the original workbook.** There is no fallback to
+**Every run starts by parsing both original workbooks.** There is no fallback to
 cached `participants.csv`/`trials.csv`: the importer re-creates both files in
-`data_private/` on every invocation, and validates 60 participants, two groups
-of 30, and 720 trials. It records the exact workbook's SHA-256 fingerprint
+`data_private/` on every invocation, validates duplicate overlap and 60 participants, two groups
+of 30, and 720 trials. It records the SHA-256 fingerprint of each original workbook
 in `results/data_provenance.txt` and each module's `data_provenance.txt`.
-The raw input is read-only; original records are never changed.
+Both raw inputs are read-only; original records are never changed.
 
 Outputs are in `results/<module>/`, containing a detailed `results.txt`,
 `statistics.csv` (where applicable), and matching publication figures as
@@ -55,21 +57,21 @@ Recommended main paper figures: `02`, `03`, `04`, `05`. `00` and `01` provide a 
 
 ## Data protection and source of truth
 
-This study's original workbook includes direct and indirect personal identifiers
+This study's original workbooks include direct and indirect personal identifiers
 such as platform IDs, IP addresses, geography, response times and free text.
-Although stored in `data/raw/` for the private research project, **do not change
-the repository to public while the original workbook is included**. Git commits
+Although stored in `data/` for the private research project, **do not change
+the repository to public while either original workbook is included**. Git commits
 and their history may retain past versions of sensitive files even after deletion.
 Access must be restricted to authorized researchers and applicable consent terms.
 
-The raw XLSX is retained byte-for-byte, with its original filename. Derived
+Both original XLSX files are retained byte-for-byte and analyzed only once per distinct response ID. Derived
 `data_private/participants.csv` and `data_private/trials.csv` are **temporary,
 regenerated intermediates**; do not use them as canonical data, and do not
 commit them. The importer discards identifiers and free text from derived CSVs.
 No preprocessed data are committed under `data/`. All descriptive statistics are regenerated under `results/`.
 
-The repository initially originated as a *public* code-only repository. The raw
-file must be added to GitHub **only after** verifying repository visibility is
+The repository initially originated as a *public* code-only repository. The two raw
+files must be added to GitHub **only after** verifying repository visibility is
 Private. The downloadable full local package includes the original raw file
 and is designed to be committed once the repository has been secured.
 
@@ -92,7 +94,8 @@ run_analysis.py                 # Every reproducible module, deterministic rando
 scripts/import_raw_xlsx.py     # Original Excel -> deidentified intermediate CSVs
 requirements.txt
 .gitignore
-data/raw/*.xlsx              # Original unmodified source; private repo ONLY
+data/data1.xlsx               # Original 30 responses; subset of data2, PRIVATE ONLY
+data/data2.xlsx               # Original 60 responses, PRIVATE ONLY
 results/00_demographics/...    # results.txt, aggregate statistics.csv, publication figure(s)
 results/01_descriptives/...
 ...
@@ -102,6 +105,6 @@ data_private/                  # Generated intermediates, ignored by Git
 
 ## Tests / verification
 
-When run on the original provided 60-person workbook, the importer and analysis verify: 60 unique respondents, 30 per condition, 12 trials each (720 total), 241 initial-conflict trials, 61 conflict-adoption events, and all choice/confidence variable identities. The importer was compared against a separate read of the same workbook, matching every derived field. The code has been executed end-to-end; chart/report files were generated successfully.
+When run on both original supplied workbooks (30 and 60 responses, exact 30-response overlap), the importer and analysis verify: 60 unique respondents, 30 per condition, 12 trials each (720 total), 241 initial-conflict trials, 61 conflict-adoption events, and all choice/confidence variable identities. The importer was compared against a separate read of the same workbook, matching every derived field. The code has been executed end-to-end; chart/report files were generated successfully.
 
 The original data were collected in Chinese. The materials were adapted from Singer et al. (2019) but are **not** a validated 12-item EMCS short scale.
