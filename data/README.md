@@ -1,9 +1,20 @@
 # Original questionnaire data (restricted)
 
-This directory is intended to contain exactly the **unmodified original XLSX** as the analysis source of truth:
+Place the two UNMODIFIED original questionnaire exports directly in this directory:
 
-`raw/c73c62ff5ec44be1b3fc6af2d5515eb6(1).xlsx`
+- `data1.xlsx`: 30 original responses
+- `data2.xlsx`: 60 original responses
 
-The original source contains identifying or potentially identifying participant information. Never commit it to a public repository. Commit it only after the GitHub repository has been confirmed Private and access limited to authorized researchers.
+IMPORTANT: Every response in `data1.xlsx` also exists identically in `data2.xlsx`.
+There are **60 unique participants**, not 90. The importer checks for exact
+duplicate survey response IDs, verifies duplicate rows are identical, and
+fails if any duplicate is inconsistent.
 
-`python run_analysis.py --all` reads this XLSX on each run and regenerates all intermediate records and results. Nothing in the `data` folder is generated or modified by the analysis. The XLSX byte hash is recorded in `results/data_provenance.txt`.
+Run `python run_analysis.py --all` in the repository root. It rereads both
+XLSX files and regenerates 9 analysis modules, reporting each original file's
+SHA-256 fingerprint in `results/data_provenance.txt`. The original files are
+read-only; the code does not edit or merge them on disk.
+
+**Privacy:** Both original files contain potentially identifiable participant
+metadata. Never upload them while the repository is Public; make it Private
+first and restrict access in accordance with consent and data retention terms.
